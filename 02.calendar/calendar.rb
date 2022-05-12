@@ -5,12 +5,22 @@ require 'optparse'
 def optparse
  opt = OptionParser.new
 
- opt.on('-m m') do |m|
-  @month = m.to_i
+ now = Time.now
+
+ opt.on('-m [m]') do |m|
+  if m == nil
+   @month = now.month
+  else
+   @month = m.to_i
+  end
  end
 
- opt.on('-y y') do |y|
-  @year = y.to_i
+ opt.on('-y [y]') do |y|
+  if y == nil
+   @year =now.year
+  else
+   @year = y.to_i
+  end
  end
 
  opt.parse!(ARGV)
