@@ -28,9 +28,6 @@ end
 
 
 def calendar(optparse)
- today = Date.today
- wday = today.wday
-
  first_day = Date.new(@year, @month, 1).day
  last_day = Date.new(@year, @month, -1).day
 
