@@ -8,19 +8,11 @@ def optparse
   now = Time.now
 
   opt.on('-m [m]') do |m|
-    if m == nil
-       @month = now.month
-     else
-       @month = m.to_i
-    end
+    @month = m.to_i || now.month
   end
 
   opt.on('-y [y]') do |y|
-    if y == nil
-      @year = now.year
-    else
-      @year = y.to_i
-    end
+    @year = y.to_i || now.year
   end
 
   opt.parse!(ARGV)
@@ -28,7 +20,6 @@ end
 
 
 def calendar(optparse)
-
   first_day = Date.new(@year, @month, 1).day
   last_day = Date.new(@year, @month, -1).day
 
@@ -52,6 +43,5 @@ def calendar(optparse)
     puts "\n" if (d + first_wday) % 7 === 0
   end
 end
-
 
 calendar(optparse)
