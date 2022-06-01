@@ -1,7 +1,6 @@
 require 'date'
 require 'optparse'
 
-
 def optparse
   opt = OptionParser.new
 
@@ -18,30 +17,28 @@ def optparse
   opt.parse!(ARGV)
 end
 
-
 def calendar(optparse)
+  binding.irb
   first_day = Date.new(@year, @month, 1).day
   last_day = Date.new(@year, @month, -1).day
-
+   
   print "#{@month}月 #{@year}年".center(20)
-  puts "\n"
+    puts "\n"
+    
+   day_of_week = ["日","月","火","水","木","金","土"]
+   puts day_of_week.join(' ')
+   
+   first_day = Date.new(@year, @month, 1).day
+   last_day = Date.new(@year, @month, -1).day
+   first_wday = Date.new(@year, @month, 1).wday
+   day_of_week[first_wday]
 
-  day_of_week = ["日","月","火","水","木","金","土"]
-  puts day_of_week.join(' ')
-
-  first_day = Date.new(@year, @month, 1).day
-  last_day = Date.new(@year, @month, -1).day
-  first_wday = Date.new(@year, @month, 1).wday
-  day_of_week[first_wday]
-
-  (first_wday).times do |t|
-    print "   " * first_day
-  end
-
-  (first_day..last_day).each do |d|
-    printf d.to_s.rjust(3)
-    puts "\n" if (d + first_wday) % 7 === 0
-  end
+   print "   " * first_wday 
+ 
+   (first_day..last_day).each do |d|
+     printf d.to_s.rjust(3)
+     puts "\n" if (d + first_wday) % 7 === 0
+   end
 end
-
+ 
 calendar(optparse)
