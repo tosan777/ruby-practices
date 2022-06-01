@@ -23,21 +23,15 @@ end
 
 point = 0
 frames.each_with_index do |frame, index|
-  if index == 9 && frame[0] == 10 && frames[index + 1].first == 10
-    point += frame[0] + frames[index + 1].first + frames[index + 1].first
-    break
-  elsif index == 9 && frame[0] == 10
-    point += frame[0] + frames[index + 1].sum
-    break
-  elsif index == 9 && frame.sum == 10
-    point += frame.sum + frames[index + 1].first
-    break
-  elsif frame[0] == 10 && frames[index + 1].first == 10
+  if frame[0] == 10 && frames[index + 1].first == 10
     point += frame[0] + frames[index + 1].first + frames[index + 2].first
+    break if index == 9
   elsif frame[0] == 10
     point += 10 + frames[index + 1].sum
+    break if index == 9
   elsif frame.sum == 10
     point += frame.sum + frames[index + 1].first
+    break if index == 9
   else
     point += frame.sum
   end
