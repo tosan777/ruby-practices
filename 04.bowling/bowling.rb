@@ -21,7 +21,6 @@ shots.each_slice(2) do |s|
   frames << s
 end
 
-point = 0
 point = frames.each_with_index.sum do |frame, index|
   next 0 if index >= 10
   if frame[0] == 10 && frames[index + 1].first == 10
