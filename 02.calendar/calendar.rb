@@ -6,21 +6,24 @@ def optparse
 
   now = Time.now
 
-  month = opt.on('-m [m]') do |m|
+  month = nil
+  year = nil
+
+  opt.on('-m [m]') do |m|
     month = m || now.month
   end
 
-  year = opt.on('-y [y]') do |y|
+  opt.on('-y [y]') do |y|
     year = y || now.year
   end
 
   opt.parse!(ARGV)
-  return month, year
+  return month.to_i, year.to_i
 end
 
 def calendar(optparse)
-  month = optparse[0].to_i
-  year = optparse[1].to_i
+  month = optparse[0]
+  year = optparse[1]
   first_day = Date.new(year, month, 1).day
   last_day = Date.new(year, month, -1).day
    
