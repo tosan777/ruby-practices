@@ -22,8 +22,9 @@ def optparse
 end
 
 def calendar(optparse)
-  month, year = optparse[0], optparse[1]
-  first_day, last_day = Date.new(year, month, 1).day, Date.new(year, month, -1).day
+  month, year = optparse
+  first_day = Date.new(year, month, 1).day
+  last_day = Date.new(year, month, -1).day 
    
   print "#{month}月 #{year}年".center(20)
   puts "\n"
