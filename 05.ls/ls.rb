@@ -13,10 +13,11 @@ def find_dir
 end
 
 def adjust_dir
-  dir = if find_dir.size % 4 == 3 || find_dir.size % 4 == 2
-          find_dir.sort.each_slice(4).to_a
+  dir_slice = find_dir.size / 3
+  dir = if find_dir.size % 3 == 1 || find_dir.size % 3 == 2
+          find_dir.sort.each_slice(dir_slice + 1).to_a
         else
-          find_dir.sort.each_slice(3).to_a
+          find_dir.sort.each_slice(dir_slice).to_a
         end
   max = dir.max_by(&:size).size
   dir.each do |a|
