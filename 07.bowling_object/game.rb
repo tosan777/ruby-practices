@@ -20,16 +20,17 @@ class Game
     score = 0
     frames.each_with_index do |frame, index|
       return score if index == 10
+      frame = Frame.new(frame[0], frame[1])
 
-      score += if frame.first == 'X' && frames[index + 1].first == 'X'
-                 Frame.new(frame.first, frames[index + 1].first, frames[index + 2].first).score
-               elsif frame.first == 'X'
-                 Frame.new(frame.first, frames[index + 1].first, frames[index + 1].last).score
-               elsif frame.first.to_i + frame.last.to_i == 10
-                 Frame.new(frame.first, frame.last, frames[index + 1].first).score
-               else
-                 Frame.new(frame.first, frame.last).score
-               end
+      score += if frame.strike? && Frame.new(frames[index + 1].first).strike?
+                frame.score + Frame.new(frames[index + 1].first, frames[index + 2].first).score
+              elsif frame.strike?
+                frame.score + Frame.new(frames[index + 1].first, frames[index + 1].last).score
+              elsif frame.spare?
+                frame.score + Frame.new(frames[index + 1].first).score
+              else
+                frame.score
+              end
     end
     score
   end
