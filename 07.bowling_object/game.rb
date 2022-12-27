@@ -3,17 +3,17 @@
 require './frame'
 
 class Game
-  def initialize(frame)
-    @frame = frame.split(',')
+  def initialize(frames)
+    @frames = frames.split(',')
   end
 
   def frames
-    frame = []
-    @frame.each do |item|
-      item == 'X' ? frame << item << 0 : frame << item
+    frames = []
+    @frames.each do |item|
+      item == 'X' ? frames << item << 0 : frames << item
     end
 
-    frame.each_slice(2).to_a
+    frames.each_slice(2).to_a
   end
 
   def score
