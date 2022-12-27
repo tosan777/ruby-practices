@@ -3,31 +3,39 @@
 require './frame'
 
 class Game
+
   def initialize(frames)
     @frames = frames.split(',')
   end
 
+  def adjust_frame
+    adjust_frame = []
+    @frames.each do |item|
+      item == 'X' ? adjust_frame << item << 0 : adjust_frame << item
+    end
+    adjust_frame.each_slice(2).to_a
+  end
+
   def frames
     frames = []
-    @frames.each do |item|
-      item == 'X' ? frames << item << 0 : frames << item
+    adjust_frame.each do |item|
+      item[1] = 0 if item[1].nil?
+      frames << Frame.new(item[0],item[1])
     end
-
-    frames.each_slice(2).to_a
+    frames
   end
 
   def score
     score = 0
     frames.each_with_index do |frame, index|
       return score if index == 10
-      frame = Frame.new(frame[0], frame[1])
 
-      score += if frame.strike? && Frame.new(frames[index + 1].first).strike?
-                frame.score + Frame.new(frames[index + 1].first, frames[index + 2].first).score
+      score += if frame.strike? && frames[index + 1].strike?
+                frame.score + frames[index + 1].first_shot.score + frames[index + 2].first_shot.score
               elsif frame.strike?
-                frame.score + Frame.new(frames[index + 1].first, frames[index + 1].last).score
+                frame.score + frames[index + 1].score
               elsif frame.spare?
-                frame.score + Frame.new(frames[index + 1].first).score
+                frame.score + frames[index + 1].first_shot.score
               else
                 frame.score
               end
