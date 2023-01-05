@@ -28,6 +28,7 @@ class Game
   def score
     score = 0
     frames.each_with_index do |frame, index|
+      # strike/spareの処理でスコアを先読みしているため、returnする。
       return score if index == 10
 
       score += if frame.strike? && frames[index + 1].strike?
