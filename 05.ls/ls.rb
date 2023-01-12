@@ -9,24 +9,25 @@ def find_dir
 end
 
 def adjust_dir
-  dir_slice = find_dir.size / 4
-  dir = if find_dir.size % dir_slice < dir_slice
-          # 要素数を割って余りが出た場合の条件
-          find_dir.sort.each_slice(dir_slice + 1).to_a
+  column = 3
+  dir_slice = find_dir.size / column
+  sort_dir = find_dir.sort
+  dir = if (sort_dir.size % column).zero?
+          sort_dir.each_slice(dir_slice).to_a
         else
-          find_dir.sort.each_slice(dir_slice).to_a
+          sort_dir.each_slice(dir_slice + 1).to_a
         end
   max = dir.max_by(&:size).size
   dir.each do |a|
-    a << nil while a.size < max
+    a << '' while a.size < max
   end
 end
 
 def trans_dir
-  trans_dir = adjust_dir.transpose.flatten
-  trans_dir.each_with_index do |item, index|
-    print ' ' if item.nil?
-    print ((index + 1) % 4).zero? ? "#{item}\n" : item.ljust(24)
+  trans_dir = adjust_dir.transpose
+  trans_dir.each do |array|
+    adjust_array = array.map {|item| item.ljust(24)}.join
+    print "#{adjust_array}\n"
   end
 end
 
