@@ -8,11 +8,12 @@ def find_dir
   array
 end
 
+COLUMN = 3
+
 def slice_dir
-  column = 3
-  dir_slice = find_dir.size / column
+  dir_slice = find_dir.size / COLUMN
   sort_dir = find_dir.sort
-  if (sort_dir.size % column).zero?
+  if (sort_dir.size % COLUMN).zero?
     sort_dir.each_slice(dir_slice).to_a
   else
     sort_dir.each_slice(dir_slice + 1).to_a
