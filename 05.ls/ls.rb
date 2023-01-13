@@ -3,9 +3,7 @@
 require 'pry'
 
 def find_dir
-  array = []
-  Dir.glob('*') { |item| array << item }
-  array
+  Dir.glob('*')
 end
 
 COLUMN = 3
