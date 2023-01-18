@@ -9,13 +9,9 @@ end
 COLUMN = 3
 
 def slice_dir
-  dir_slice = find_dir.size / COLUMN
-  sort_dir = find_dir.sort
-  if (sort_dir.size % COLUMN).zero?
-    sort_dir.each_slice(dir_slice).to_a
-  else
-    sort_dir.each_slice(dir_slice + 1).to_a
-  end
+  dir_division = find_dir.size / COLUMN
+  dir_slice = (find_dir.size % COLUMN).zero? ? dir_division : dir_division + 1
+  slice_dir = find_dir.each_slice(dir_slice).to_a
 end
 
 def adjust_dir
