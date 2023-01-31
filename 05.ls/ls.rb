@@ -12,7 +12,7 @@ def optparse
 end
 
 def find_dir
-  optparse[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+  Dir.glob('*', optparse[:a] ? File::FNM_DOTMATCH : 0)
 end
 
 COLUMN = 3
