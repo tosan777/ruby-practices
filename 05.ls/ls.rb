@@ -7,12 +7,14 @@ def optparse
   opt = OptionParser.new
   params = {}
   opt.on('-a') { |v| params[:a] = v }
+  opt.on('-r') { |v| params[:r] = v }
   opt.parse(ARGV)
   params
 end
 
 def find_dir
-  Dir.glob('*', optparse[:a] ? File::FNM_DOTMATCH : 0)
+  find_dir = Dir.glob('*', optparse[:a] ? File::FNM_DOTMATCH : 0)
+  optparse[:r] ? find_dir.reverse : find_dir
 end
 
 COLUMN = 3
@@ -20,7 +22,7 @@ COLUMN = 3
 def slice_dir
   dir_division = find_dir.size / COLUMN
   dir_division += 1 unless (find_dir.size % COLUMN).zero?
-  find_dir.sort.each_slice(dir_division).to_a
+  find_dir.each_slice(dir_division).to_a
 end
 
 def adjust_dir
