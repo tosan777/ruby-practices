@@ -93,57 +93,57 @@ def file_stats_conversion(file_stat, file)
   }
 end
 
-def find_dir
+def display_file
   find_dir = Dir.glob('*', optparse[:a] ? File::FNM_DOTMATCH : 0)
   find_sort_dir = find_dir.sort
-  optparse[:r] ? find_sort_dir.reverse : find_sort_dir
+  finalize_dir = optparse[:r] ? find_sort_dir.reverse : find_sort_dir
 
   if optparse[:l]
-    find_sort_dir.map do |file|
-      file_stat = File.stat(file)
-      file_stats_conversion(file_stat, file)
-    end
+    display_stat_files(finalize_dir)
   else
-    find_sort_dir
+    display_files(finalize_dir)
+  end
+end
+
+def display_stat_files(find_sort_dir)
+  file_stats = find_sort_dir.map do |file|
+    file_stat = File.stat(file)
+    file_stats_conversion(file_stat, file)
+  end
+
+  file_stats.each do |file|
+    print file[:ftype_permission].to_s
+    print file[:file_mode].to_s.ljust(11)
+    print "#{file[:stat_nlink]} "
+    print "#{file[:stat_uid]}  "
+    print "#{file[:stat_gid]} "
+    print file[:stat_size].to_s.ljust(6)
+    print "#{file[:stat_time]} "
+    print "#{file[:file_name]}\n"
+  end
+end
+
+def display_files(find_sort_dir)
+  slice_dir = slice_directory(find_sort_dir)
+  adjust_dir = adjust_directory(slice_dir)
+  trans_dir = adjust_dir.transpose
+  trans_dir.each do |trans_dir_item|
+    adjust_dir_item = trans_dir_item.map { |item| item.ljust(24) }.join
+    print "#{adjust_dir_item}\n"
   end
 end
 
 COLUMN = 3
 
-def slice_dir
-  return find_dir if find_dir.first.instance_of?(Hash)
-
-  dir_division = find_dir.size / COLUMN
-  dir_division += 1 unless (find_dir.size % COLUMN).zero?
-  find_dir.each_slice(dir_division).to_a
+def slice_directory(find_sort_dir)
+  dir_division = find_sort_dir.size / COLUMN
+  dir_division += 1 unless (find_sort_dir.size % COLUMN).zero?
+  slice_dir = find_sort_dir.each_slice(dir_division).to_a
 end
 
-def adjust_dir
-  return find_dir if find_dir.first.instance_of?(Hash)
-
+def adjust_directory(slice_dir)
   max = slice_dir.max_by(&:size).size
-  slice_dir.each { |a| a << '' while a.size < max }
+  adjust_dir = slice_dir.each { |a| a << '' while a.size < max }
 end
 
-def trans_dir
-  if adjust_dir.first.instance_of?(Hash)
-    adjust_dir.each do |file_stats|
-      print file_stats[:ftype_permission].to_s
-      print file_stats[:file_mode].to_s.ljust(11)
-      print "#{file_stats[:stat_nlink]} "
-      print "#{file_stats[:stat_uid]}  "
-      print "#{file_stats[:stat_gid]} "
-      print file_stats[:stat_size].to_s.ljust(6)
-      print "#{file_stats[:stat_time]} "
-      print "#{file_stats[:file_name]}\n"
-    end
-  else
-    trans_dir = adjust_dir.transpose
-    trans_dir.each do |trans_dir_item|
-      adjust_dir_item = trans_dir_item.map { |item| item.ljust(24) }.join
-      print "#{adjust_dir_item}\n"
-    end
-  end
-end
-
-trans_dir
+display_file
