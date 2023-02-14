@@ -38,9 +38,8 @@ end
 
 # 8進数のパーミッションを文字列に変換
 def mode_genarate(mode)
-  mode_genarates = []
-  mode.slice(3, 3).each_char do |char|
-    mode_genarate = {
+  mode_genarates = mode.slice(3, 3).each_char.map do |char|
+    {
       '0' => '---',
       '1' => '--x',
       '2' => '-w-',
@@ -50,7 +49,6 @@ def mode_genarate(mode)
       '6' => 'rw-',
       '7' => 'rwx'
     }[char]
-    mode_genarates << mode_genarate
   end
   special_permission_genarate(mode, mode_genarates)
   mode_genarates.join
