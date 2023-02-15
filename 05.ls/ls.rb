@@ -24,7 +24,7 @@ def get_last_time(file_stat)
 end
 
 # ファイルタイプを変換
-def ftype_genarate(ftype)
+def ftype_generate(ftype)
   {
     'fifo' => 'p',
     'characterSpecial' => 'c',
@@ -37,8 +37,8 @@ def ftype_genarate(ftype)
 end
 
 # 8進数のパーミッションを文字列に変換
-def mode_genarate(mode)
-  mode_genarates = mode.slice(3, 3).each_char.map do |char|
+def mode_generate(mode)
+  mode_generates = mode.slice(-3, 3).each_char.map do |char|
     {
       '0' => '---',
       '1' => '--x',
@@ -50,38 +50,34 @@ def mode_genarate(mode)
       '7' => 'rwx'
     }[char]
   end
-  special_permission_genarate(mode, mode_genarates)
-  mode_genarates.join
+  special_permission_generate(mode, mode_generates)
+  mode_generates.join
+end
+
+# 2進数を返す
+def binary_number_format(mode)
+  binary_number = mode.slice(-4).to_i.to_s(2)
+  binary_number_format = format("%03d", binary_number)
 end
 
 # 特別権限が付与されていた場合のパーミッションの変換
-def special_permission_genarate(mode, mode_genarates)
-  case mode.slice(2)
-  when '1'
-    mode_genarates[2] = if mode_genarates[2].slice(2) == 'x'
-                          mode_genarates[2].gsub(/.$/, 't')
-                        else
-                          mode_genarates[2].gsub(/.$/, 'T')
-                        end
-  when '2'
-    mode_genarates[1] = if mode_genarates[1].slice(2) == 'x'
-                          mode_genarates[1].gsub(/.$/, 's')
-                        else
-                          mode_genarates[1].gsub(/.$/, 'S')
-                        end
-  when '4'
-    mode_genarates[0] = if mode_genarates[0].slice(2) == 'x'
-                          mode_genarates[0].gsub(/.$/, 's')
-                        else
-                          mode_genarates[0].gsub(/.$/, 'S')
-                        end
+def special_permission_generate(mode, mode_generates)
+  number_split = binary_number_format(mode).split('')
+  number_split.each_with_index do |char, i|
+    if char == '1'
+      replace = mode_generates[i].slice(2) == 'x' ? 's' : 'S'
+      if i == 2
+        replace = replace.include?('s') ? 't' : 'T'
+      end
+      mode_generates[i] = mode_generates[i].gsub(/.$/, replace)
+    end
   end
 end
 
 def file_stats_conversion(file_stat, file)
   {
-    ftype_permission: ftype_genarate(file_stat.ftype),
-    file_mode: mode_genarate(file_stat.mode.to_s(8)),
+    ftype_permission: ftype_generate(file_stat.ftype),
+    file_mode: mode_generate(file_stat.mode.to_s(8)),
     stat_nlink: file_stat.nlink,
     stat_uid: Etc.getpwuid(file_stat.uid).name,
     stat_gid: Etc.getgrgid(file_stat.gid).name,
